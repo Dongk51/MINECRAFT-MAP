@@ -16,6 +16,7 @@ from fastapi.staticfiles import StaticFiles
 
 from api.routes.replace import router as replace_router
 from api.routes.generate import router as generate_router
+from api.routes.preview import router as preview_router
 
 # ── CORS origins ─────────────────────────────────────────────────────
 _DEFAULT_ORIGINS = [
@@ -49,6 +50,7 @@ app.add_middleware(
 # ── API routes ────────────────────────────────────────────────────────
 app.include_router(replace_router, prefix="/api", tags=["replace"])
 app.include_router(generate_router, prefix="/api", tags=["generate"])
+app.include_router(preview_router, prefix="/api", tags=["preview"])
 
 
 @app.get("/api/health", tags=["health"])

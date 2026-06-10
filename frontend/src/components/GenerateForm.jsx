@@ -5,10 +5,19 @@ const DIMENSIONS = ['overworld', 'nether', 'end']
 export default function GenerateForm({ worldPath, onResult, onLoading }) {
   const [genType, setGenType]         = useState('flat')
   const [block, setBlock]             = useState('minecraft:grass_block')
+  // flat
   const [height, setHeight]           = useState(64)
+  // hills
   const [baseHeight, setBaseHeight]   = useState(64)
   const [amplitude, setAmplitude]     = useState(20)
   const [scale, setScale]             = useState(100)
+  // ocean
+  const [seaLevel, setSeaLevel]       = useState(62)
+  const [floorHeight, setFloorHeight] = useState(45)
+  // forest
+  const [groundHeight, setGroundHeight] = useState(64)
+  const [treeDensity, setTreeDensity]   = useState(0.05)
+  // shared
   const [dimension, setDim]           = useState('overworld')
   const [useRegion, setUseRegion]     = useState(false)
   const [x1, setX1] = useState(0)
@@ -17,6 +26,8 @@ export default function GenerateForm({ worldPath, onResult, onLoading }) {
   const [z2, setZ2] = useState(256)
   const [dryRun, setDryRun]           = useState(false)
   const [busy, setBusy]               = useState(false)
+
+  const needsBlock = genType === 'flat' || genType === 'hills'
 
   const submit = async (e) => {
     e.preventDefault()
@@ -28,22 +39,26 @@ export default function GenerateForm({ worldPath, onResult, onLoading }) {
     onLoading(true)
     onResult(null)
 
+    const typeParams = {
+      flat:   { block, height: Number(height) },
+      hills:  { block, base_height: Number(baseHeight), amplitude: Number(amplitude), scale: Number(scale) },
+      ocean:  { sea_level: Number(seaLevel), floor_height: Number(floorHeight) },
+      forest: { ground_height: Number(groundHeight), tree_density: Number(treeDensity) },
+    }[genType]
+
     const body = {
       world_path: worldPath,
       type: genType,
-      block,
       dimension,
       dry_run: dryRun,
       region: useRegion
         ? { x1: Number(x1), z1: Number(z1), x2: Number(x2), z2: Number(z2) }
         : null,
-      ...(genType === 'flat'
-        ? { height: Number(height) }
-        : { base_height: Number(baseHeight), amplitude: Number(amplitude), scale: Number(scale) }),
+      ...typeParams,
     }
 
     try {
-      const res = await fetch('/api/generate', {
+      const res  = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -67,23 +82,27 @@ export default function GenerateForm({ worldPath, onResult, onLoading }) {
         <select value={genType} onChange={e => setGenType(e.target.value)}>
           <option value="flat">🟩 평지 (Flat)</option>
           <option value="hills">⛰ 언덕 (Hills)</option>
+          <option value="ocean">🌊 바다 (Ocean)</option>
+          <option value="forest">🌲 숲 (Forest)</option>
         </select>
       </div>
 
-      {/* Block */}
-      <div className="field">
-        <label>채울 블록</label>
-        <input
-          type="text"
-          value={block}
-          onChange={e => setBlock(e.target.value)}
-          placeholder="minecraft:grass_block"
-          required
-        />
-      </div>
+      {/* Block (flat / hills only) */}
+      {needsBlock && (
+        <div className="field">
+          <label>채울 블록</label>
+          <input
+            type="text"
+            value={block}
+            onChange={e => setBlock(e.target.value)}
+            placeholder="minecraft:grass_block"
+            required
+          />
+        </div>
+      )}
 
       {/* Type-specific params */}
-      {genType === 'flat' ? (
+      {genType === 'flat' && (
         <div className="field">
           <label>높이 (Height y)</label>
           <input
@@ -93,7 +112,9 @@ export default function GenerateForm({ worldPath, onResult, onLoading }) {
             min={-64} max={320}
           />
         </div>
-      ) : (
+      )}
+
+      {genType === 'hills' && (
         <div className="field-row">
           <div className="field">
             <label>기준 높이</label>
@@ -106,6 +127,37 @@ export default function GenerateForm({ worldPath, onResult, onLoading }) {
           <div className="field">
             <label>스케일</label>
             <input type="number" value={scale} onChange={e => setScale(e.target.value)} min={1} max={2000} />
+          </div>
+        </div>
+      )}
+
+      {genType === 'ocean' && (
+        <div className="field-row">
+          <div className="field">
+            <label>해수면 높이</label>
+            <input type="number" value={seaLevel} onChange={e => setSeaLevel(e.target.value)} min={-64} max={320} />
+          </div>
+          <div className="field">
+            <label>해저 높이</label>
+            <input type="number" value={floorHeight} onChange={e => setFloorHeight(e.target.value)} min={-64} max={320} />
+          </div>
+        </div>
+      )}
+
+      {genType === 'forest' && (
+        <div className="field-row">
+          <div className="field">
+            <label>지면 높이</label>
+            <input type="number" value={groundHeight} onChange={e => setGroundHeight(e.target.value)} min={-64} max={320} />
+          </div>
+          <div className="field">
+            <label>나무 밀도 (0–1)</label>
+            <input
+              type="number"
+              value={treeDensity}
+              onChange={e => setTreeDensity(e.target.value)}
+              min={0} max={1} step={0.01}
+            />
           </div>
         </div>
       )}

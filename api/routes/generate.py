@@ -6,6 +6,8 @@ from api._executor import executor
 try:
     from terrain_generator.flat import generate_flat
     from terrain_generator.hills import generate_hills
+    from terrain_generator.ocean import generate_ocean
+    from terrain_generator.forest import generate_forest
     _AMULET_AVAILABLE = True
 except ImportError:
     _AMULET_AVAILABLE = False
@@ -25,6 +27,8 @@ async def generate(req: GenerateRequest):
     loop = asyncio.get_running_loop()
     try:
         if req.type == "flat":
+            if not req.block:
+                raise HTTPException(status_code=422, detail="flat 타입은 block 필드가 필요합니다.")
             count: int = await loop.run_in_executor(
                 executor,
                 lambda: generate_flat(
@@ -37,7 +41,9 @@ async def generate(req: GenerateRequest):
                     progress=False,
                 ),
             )
-        else:
+        elif req.type == "hills":
+            if not req.block:
+                raise HTTPException(status_code=422, detail="hills 타입은 block 필드가 필요합니다.")
             count = await loop.run_in_executor(
                 executor,
                 lambda: generate_hills(
@@ -52,6 +58,34 @@ async def generate(req: GenerateRequest):
                     progress=False,
                 ),
             )
+        elif req.type == "ocean":
+            count = await loop.run_in_executor(
+                executor,
+                lambda: generate_ocean(
+                    world_path=req.world_path,
+                    sea_level=req.sea_level or 62,
+                    floor_height=req.floor_height or 45,
+                    region=region,
+                    dimension=req.dimension,
+                    dry_run=req.dry_run,
+                    progress=False,
+                ),
+            )
+        else:  # forest
+            count = await loop.run_in_executor(
+                executor,
+                lambda: generate_forest(
+                    world_path=req.world_path,
+                    ground_height=req.ground_height or 64,
+                    tree_density=req.tree_density or 0.05,
+                    region=region,
+                    dimension=req.dimension,
+                    dry_run=req.dry_run,
+                    progress=False,
+                ),
+            )
+    except HTTPException:
+        raise
     except Exception as exc:
         raise HTTPException(status_code=400, detail=str(exc))
 

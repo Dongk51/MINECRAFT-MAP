@@ -262,6 +262,61 @@ select {
   margin: 4px 0 8px;
 }
 
+/* ── Preview panel ──────────────────────────────────────────────── */
+.preview-meta {
+  font-size: 7px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.preview-canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.preview-canvas-scroll {
+  max-width: 100%;
+  overflow: auto;
+  border: 2px solid var(--border);
+  box-shadow: 3px 3px 0 var(--shadow);
+  background: #000;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--bg);
+}
+
+.preview-canvas {
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* ── Map legend ─────────────────────────────────────────────────── */
+.preview-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 7px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(255,255,255,0.15);
+  flex-shrink: 0;
+  image-rendering: pixelated;
+}
+
 /* ── Scrollbar ──────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg); }

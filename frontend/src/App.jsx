@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import ReplaceForm from './components/ReplaceForm'
-import GenerateForm from './components/GenerateForm'
+import ReplaceForm   from './components/ReplaceForm'
+import GenerateForm  from './components/GenerateForm'
+import PreviewPanel  from './components/PreviewPanel'
 
 const TABS = [
   { id: 'replace',  label: '⛏ 블록 교체' },
   { id: 'generate', label: '🌍 지형 생성' },
+  { id: 'preview',  label: '🗺 맵 미리보기' },
 ]
 
 function ResultPanel({ result, loading }) {
@@ -92,23 +94,29 @@ export default function App() {
 
       {/* ── Form panel ───────────────────────────────────────── */}
       <div className="panel">
-        {activeTab === 'replace' ? (
+        {activeTab === 'replace' && (
           <ReplaceForm
             worldPath={worldPath}
             onResult={setResult}
             onLoading={setLoading}
           />
-        ) : (
+        )}
+        {activeTab === 'generate' && (
           <GenerateForm
             worldPath={worldPath}
             onResult={setResult}
             onLoading={setLoading}
           />
         )}
+        {activeTab === 'preview' && (
+          <PreviewPanel worldPath={worldPath} />
+        )}
       </div>
 
-      {/* ── Result ───────────────────────────────────────────── */}
-      <ResultPanel result={result} loading={loading} />
+      {/* ── Result (replace / generate only) ─────────────────── */}
+      {activeTab !== 'preview' && (
+        <ResultPanel result={result} loading={loading} />
+      )}
     </div>
   )
 }
