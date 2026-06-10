@@ -2,14 +2,24 @@ import asyncio
 from fastapi import APIRouter, HTTPException
 from api.schemas import GenerateRequest, OperationResult
 from api._executor import executor
-from terrain_generator.flat import generate_flat
-from terrain_generator.hills import generate_hills
+
+try:
+    from terrain_generator.flat import generate_flat
+    from terrain_generator.hills import generate_hills
+    _AMULET_AVAILABLE = True
+except ImportError:
+    _AMULET_AVAILABLE = False
 
 router = APIRouter()
+
+_LOCAL_ONLY_MSG = "이 기능은 로컬 환경에서만 사용 가능합니다. (amulet-core not installed)"
 
 
 @router.post("/generate", response_model=OperationResult)
 async def generate(req: GenerateRequest):
+    if not _AMULET_AVAILABLE:
+        raise HTTPException(status_code=501, detail=_LOCAL_ONLY_MSG)
+
     region = (req.region.x1, req.region.z1, req.region.x2, req.region.z2) if req.region else None
 
     loop = asyncio.get_running_loop()

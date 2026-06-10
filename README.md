@@ -83,7 +83,7 @@ cd minecraft-map
 
 # 2. Python environment (Python 3.11 required for amulet-core wheels)
 uv venv .venv --python 3.11
-uv pip install -r requirements.txt
+uv pip install -r requirements.local.txt   # includes amulet-core + opensimplex
 
 # 3. Frontend
 cd frontend && npm install && npm run build && cd ..

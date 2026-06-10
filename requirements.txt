@@ -1,5 +1,2 @@
-amulet-core>=1.0.0
-opensimplex>=0.4
 fastapi>=0.110.0
 uvicorn[standard]>=0.27.0
-# Python 3.11 required — amulet-core wheels are not available for 3.12+
