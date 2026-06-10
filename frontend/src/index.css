@@ -1,0 +1,269 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Design tokens ──────────────────────────────────────────────── */
+:root {
+  --green:       #5a9e2f;
+  --green-hi:    #74c93c;
+  --green-sh:    #2d5a14;
+  --bg:          #141414;
+  --panel:       #242424;
+  --panel-hi:    #2e2e2e;
+  --border:      #484848;
+  --border-hi:   #686868;
+  --shadow:      #000;
+  --text:        #ebebeb;
+  --text-dim:    #868686;
+  --red:         #c0392b;
+  --red-bg:      #2a1010;
+  --gold:        #e8a020;
+  --gold-bg:     #2a2010;
+  --green-bg:    #0e2010;
+  --font-px:     'Press Start 2P', monospace;
+  --font-ui:     'Press Start 2P', monospace;
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
+body {
+  font-family: var(--font-ui);
+  background-color: var(--bg);
+  /* stone brick grid */
+  background-image:
+    repeating-linear-gradient(0deg,   transparent, transparent 31px, rgba(255,255,255,0.025) 32px),
+    repeating-linear-gradient(90deg,  transparent, transparent 31px, rgba(255,255,255,0.025) 32px);
+  background-size: 32px 32px;
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ── Layout ─────────────────────────────────────────────────────── */
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* ── Header ─────────────────────────────────────────────────────── */
+.app-header {
+  text-align: center;
+  padding: 28px 16px;
+  margin-bottom: 24px;
+  background: linear-gradient(180deg, #2d5a14 0%, #1a3a0a 100%);
+  border: 3px solid var(--green);
+  box-shadow: 4px 4px 0 var(--shadow), inset 0 1px 0 rgba(255,255,255,0.15);
+  image-rendering: pixelated;
+}
+.app-header h1 {
+  font-size: clamp(12px, 3.5vw, 18px);
+  color: #fff;
+  text-shadow: 3px 3px 0 var(--green-sh);
+  letter-spacing: 2px;
+}
+.app-header p {
+  font-size: 7px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 12px;
+  letter-spacing: 1px;
+}
+
+/* ── Panel ──────────────────────────────────────────────────────── */
+.panel {
+  background: var(--panel);
+  border: 2px solid var(--border);
+  box-shadow: 3px 3px 0 var(--shadow), inset 0 1px 0 rgba(255,255,255,0.06);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+/* ── World path bar ─────────────────────────────────────────────── */
+.world-path-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.world-path-bar label {
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+/* ── Tabs ───────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+}
+.tab-btn {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  background: var(--panel);
+  color: var(--text-dim);
+  border: 2px solid var(--border);
+  border-bottom: none;
+  padding: 12px 18px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: color .1s, background .1s;
+  margin-bottom: -2px;
+}
+.tab-btn:hover { color: var(--text); background: var(--panel-hi); }
+.tab-btn.active {
+  color: var(--green-hi);
+  background: var(--panel-hi);
+  border-color: var(--green);
+  border-bottom: 2px solid var(--panel-hi);
+  box-shadow: inset 0 2px 0 var(--green);
+}
+
+/* ── Form layout ────────────────────────────────────────────────── */
+.form { display: flex; flex-direction: column; gap: 14px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.field-row-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+
+/* ── Labels ─────────────────────────────────────────────────────── */
+label {
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── Inputs & Selects ───────────────────────────────────────────── */
+input[type="text"],
+input[type="number"],
+select {
+  font-family: var(--font-ui);
+  font-size: 9px;
+  background: #0e0e0e;
+  color: var(--text);
+  border: 2px solid var(--border);
+  padding: 10px 12px;
+  width: 100%;
+  outline: none;
+  box-shadow: inset 2px 2px 0 rgba(0,0,0,0.5);
+  transition: border-color .1s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: var(--green);
+}
+input[type="text"]::placeholder { color: var(--text-dim); }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23868686' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+/* ── Checkbox row ───────────────────────────────────────────────── */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.checkbox-row input[type="checkbox"] {
+  width: 16px; height: 16px;
+  accent-color: var(--green);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.checkbox-row span {
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+/* ── Region toggle ──────────────────────────────────────────────── */
+.region-toggle {
+  font-size: 8px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  background: transparent;
+  font-family: var(--font-ui);
+  letter-spacing: 1px;
+  transition: color .1s, border-color .1s;
+}
+.region-toggle:hover { color: var(--text); border-color: var(--border-hi); }
+.region-section { display: flex; flex-direction: column; gap: 8px; }
+.region-label {
+  font-size: 8px;
+  color: var(--gold);
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────── */
+.mc-btn {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  color: #fff;
+  background: var(--green);
+  border: none;
+  padding: 14px 24px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow:
+    3px 3px 0 var(--shadow),
+    inset -2px -4px 0 rgba(0,0,0,0.3),
+    inset 2px 2px 0 rgba(255,255,255,0.15);
+  transition: background .08s, transform .05s, box-shadow .05s;
+  align-self: flex-start;
+}
+.mc-btn:hover:not(:disabled) { background: var(--green-hi); }
+.mc-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--shadow), inset -1px -2px 0 rgba(0,0,0,0.3);
+}
+.mc-btn:disabled {
+  background: #444;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0 var(--shadow);
+  opacity: 0.7;
+}
+.mc-btn.full-width { align-self: stretch; width: 100%; }
+
+/* ── Result panel ───────────────────────────────────────────────── */
+.result-panel {
+  padding: 16px 20px;
+  border: 2px solid var(--border);
+  font-size: 9px;
+  line-height: 1.8;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.result-panel.loading { border-color: var(--border-hi); color: var(--text-dim); }
+.result-panel.success { border-color: var(--green); background: var(--green-bg); color: #8de06a; }
+.result-panel.dry     { border-color: var(--gold);  background: var(--gold-bg);  color: #e8c060; }
+.result-panel.error   { border-color: var(--red);   background: var(--red-bg);   color: #e06060; }
+
+.result-icon { font-size: 18px; flex-shrink: 0; line-height: 1; }
+.result-count { font-size: 13px; margin-bottom: 4px; color: inherit; }
+
+/* ── Divider ────────────────────────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 4px 0 8px;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hi); }
